@@ -4,7 +4,7 @@
     <Authors>Invenietis</Authors>
     <Company>Invenietis</Company>
     <Copyright>© Invenietis 2018</Copyright>
-    <RepositoryUrl>https://invenietis.visualstudio.com/Signature/_git/SignatureCore</RepositoryUrl>
+    <RepositoryUrl>https://invenietis.visualstudio.com/CK/_git/CK-AmbientValues</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <!--<AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)Signature.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
