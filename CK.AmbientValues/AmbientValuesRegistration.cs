@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,7 +60,7 @@ namespace CK.Core
             configure?.Invoke( desc );
             _lazyBag.Add( key, desc );
 
-            _services.AddTransient<T>();
+            _services.AddScoped<T>();
 
             return this;
         }

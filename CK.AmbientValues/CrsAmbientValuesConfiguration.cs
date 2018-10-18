@@ -14,7 +14,7 @@ namespace CK.Core
 
         public IAmbientValuesRegistration Configure()
         {
-            _services.AddSingleton<IAmbientValueProviderFactory, DefaultAmbientValueFactory>();
+            _services.AddScoped<IAmbientValueProviderFactory, DefaultAmbientValueFactory>();
             _services.AddScoped<IAmbientValues, AmbientValues>();
 
             var a = new AmbientValuesRegistration( _services );
