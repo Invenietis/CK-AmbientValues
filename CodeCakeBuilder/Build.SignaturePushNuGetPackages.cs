@@ -1,8 +1,5 @@
-using Cake.Common.Build;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
-using Cake.Common.Tools.NuGet;
-using Cake.Common.Tools.NuGet.Push;
 using Cake.Core.IO;
 using SimpleGitVersion;
 using System;
@@ -14,8 +11,9 @@ namespace CodeCake
     public partial class Build
     {
         const string NUGET_OUTPUT_DIR = "NuGetPackages";
-        const string RELEASE_FEED_NAME = "Signature";
-        const string CI_FEED_NAME = "SignatureCI";
+        const string RELEASE_FEED_NAME = "invenietis-release";
+        const string PREVIEW_FEED_NAME = "invenietis-preview";
+        const string CI_FEED_NAME = "invenietis-ci";
 
         void SignaturePushNuGetPackages( IEnumerable<FilePath> nugetPackages, SimpleRepositoryInfo gitInfo )
         {
@@ -46,7 +44,16 @@ namespace CodeCake
 
             if( gitInfo.IsValidRelease )
             {
-                targetDir = Cake.Directory( $"{NUGET_OUTPUT_DIR}/{RELEASE_FEED_NAME}" );
+                if( gitInfo.PreReleaseName == ""
+                    || gitInfo.PreReleaseName == "prerelease"
+                    || gitInfo.PreReleaseName == "rc" )
+                {
+                    targetDir = Cake.Directory( $"{NUGET_OUTPUT_DIR}/{RELEASE_FEED_NAME}" );
+                }
+                else
+                {
+                    targetDir = Cake.Directory( $"{NUGET_OUTPUT_DIR}/{PREVIEW_FEED_NAME}" );
+                }
             }
             else
             {
@@ -72,6 +79,5 @@ namespace CodeCake
             Console.WriteLine( buildNumberInstruction );
             Console.WriteLine();
         }
-
     }
 }
