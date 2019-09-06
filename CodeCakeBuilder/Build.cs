@@ -18,7 +18,6 @@ namespace CodeCake
     /// <summary>
     /// Standard build "script".
     /// </summary>
-    [AddPath("%UserProfile%/.nuget/packages/**/tools*")]
     public partial class Build : CodeCakeHost
     {
         public Build()
@@ -26,63 +25,63 @@ namespace CodeCake
             Cake.Log.Verbosity = Verbosity.Diagnostic;
 
             SimpleRepositoryInfo gitInfo = Cake.GetSimpleRepositoryInfo();
-            StandardGlobalInfo globalInfo = CreateStandardGlobalInfo(gitInfo)
+            StandardGlobalInfo globalInfo = CreateStandardGlobalInfo( gitInfo )
                                                 .AddDotnet()
                                                 .SetCIBuildTag();
 
-            Task("Check-Repository")
-                .Does(() =>
-               {
-                   globalInfo.TerminateIfShouldStop();
-               });
-
-            Task("Clean")
-                .IsDependentOn("Check-Repository")
-                .Does(() =>
+            Task( "Check-Repository" )
+                .Does( () =>
                 {
-                    globalInfo.GetDotnetSolution().Clean();
-                    Cake.CleanDirectories(globalInfo.ReleasesFolder);
-                });
+                    globalInfo.TerminateIfShouldStop();
+                } );
+
+            Task( "Clean" )
+                .IsDependentOn( "Check-Repository" )
+                .Does( () =>
+                 {
+                     globalInfo.GetDotnetSolution().Clean();
+                     Cake.CleanDirectories( globalInfo.ReleasesFolder );
+                 } );
 
 
-            Task("Build")
-                .IsDependentOn("Check-Repository")
-                .IsDependentOn("Clean")
-                .Does(() =>
+            Task( "Build" )
+                .IsDependentOn( "Check-Repository" )
+                .IsDependentOn( "Clean" )
+                .Does( () =>
+                 {
+                     globalInfo.GetDotnetSolution().Build();
+                 } );
+
+            Task( "Unit-Testing" )
+                .IsDependentOn( "Build" )
+                .WithCriteria( () => Cake.InteractiveMode() == InteractiveMode.NoInteraction
+                                     || Cake.ReadInteractiveOption( "RunUnitTests", "Run Unit Tests?", 'Y', 'N' ) == 'Y' )
+               .Does( () =>
                 {
-                    globalInfo.GetDotnetSolution().Build();
-                });
+                    var testProjects = globalInfo.GetDotnetSolution().Projects.Where( p => p.Name.EndsWith( ".Tests" )
+                                                                                           && !p.Path.Segments.Contains( "Integration" ) );
+                    globalInfo.GetDotnetSolution().Test();
+                } );
 
-            Task("Unit-Testing")
-                .IsDependentOn("Build")
-                .WithCriteria(() => Cake.InteractiveMode() == InteractiveMode.NoInteraction
-                                    || Cake.ReadInteractiveOption("RunUnitTests", "Run Unit Tests?", 'Y', 'N') == 'Y')
-               .Does(() =>
-               {
-                   var testProjects = globalInfo.GetDotnetSolution().Projects.Where(p => p.Name.EndsWith(".Tests")
-                                                           && !p.Path.Segments.Contains("Integration"));
-                   globalInfo.GetDotnetSolution().Test();
-               });
+            Task( "Create-Packages" )
+                .WithCriteria( () => gitInfo.IsValid )
+                .IsDependentOn( "Unit-Testing" )
+                .Does( () =>
+                 {
+                     globalInfo.GetDotnetSolution().Pack();
+                 } );
 
-            Task("Create-Packages")
-                //.WithCriteria( () => gitInfo.IsValid )
-                .IsDependentOn("Unit-Testing")
-                .Does(() =>
-                {
-                    globalInfo.GetDotnetSolution().Pack();
-                });
-
-            Task("Push-Packages")
-                .WithCriteria(() => gitInfo.IsValid)
-                .IsDependentOn("Create-Packages")
-                .Does(() =>
-                {
-                    globalInfo.PushArtifacts();
-                });
+            Task( "Push-Packages" )
+                .WithCriteria( () => gitInfo.IsValid )
+                .IsDependentOn( "Create-Packages" )
+                .Does( () =>
+                 {
+                     globalInfo.PushArtifacts();
+                 } );
 
             // The Default task for this script can be set here.
-            Task("Default")
-                .IsDependentOn("Push-Packages");
+            Task( "Default" )
+                .IsDependentOn( "Push-Packages" );
 
         }
     }
