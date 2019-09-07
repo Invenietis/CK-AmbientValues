@@ -52,6 +52,6 @@ namespace CK.Core
     internal class AutoResolveAmbientValueProviderDescriptor<TProvider> : BaseAmbientValueProviderDescriptor
         where TProvider : class, IAmbientValueProvider
     {
-        public override IAmbientValueProvider Resolve( IServiceProvider services ) => services.GetService<TProvider>();
+        public override IAmbientValueProvider Resolve( IServiceProvider services ) => services.GetService<TProvider>( false );
     }
 }
