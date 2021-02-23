@@ -24,7 +24,7 @@ namespace CK.Core
 
         public IEnumerable<IAmbientValueProviderDescriptor> AmbientValues
         {
-            get { return _lazyBag != null ? _lazyBag.Values : CK.Core.Util.Array.Empty<IAmbientValueProviderDescriptor>(); }
+            get { return _lazyBag != null ? _lazyBag.Values : Array.Empty<IAmbientValueProviderDescriptor>(); }
         }
 
         public IAmbientValuesRegistration AddProvider( string key, Func<IServiceProvider, IAmbientValueProvider> provider, Action<IConfigurableAmbientValueProviderDescriptor> configure = null )
