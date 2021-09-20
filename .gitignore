@@ -34,11 +34,11 @@ packages/
 
 [Bb]in/
 [Oo]bj/
-[Rr]elease/
-[Rr]eleases/
 Tests/**/TestResult*.xml
 CodeCakeBuilder/MemoryKey.*.txt
 Tests/**/Logs/
 Tests/**/CKSetup-WorkingDir/
 CodeCakeBuilder/UnitTestsDone.*.txt
 $StObjGen/
+CodeCakeBuilder/[Rr]elease/
+CodeCakeBuilder/[Rr]eleases/
