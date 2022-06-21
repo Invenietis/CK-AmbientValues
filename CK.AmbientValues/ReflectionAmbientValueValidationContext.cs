@@ -21,7 +21,7 @@ namespace CK.Core
         {
             var actionType = Action.GetType();
             var properties = actionType.GetProperties().ToDictionary( k => k.Name );
-            var property = properties.GetValueWithDefault( valueName, null );
+            var property = properties.GetValueOrDefault( valueName, null );
             if( property == null )
             {
                 Monitor.Info( $"Property {valueName} not found on command { actionType.Name}" );

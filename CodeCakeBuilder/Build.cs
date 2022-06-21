@@ -1,4 +1,4 @@
-using Cake.Common.IO;
+
 using Cake.Common.Solution;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Build;
@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NuGet.Versioning;
+using Cake.Common.IO;
 
 namespace CodeCake
 {
@@ -39,7 +40,7 @@ namespace CodeCake
                 .Does( () =>
                  {
                      globalInfo.GetDotnetSolution().Clean();
-                     Cake.CleanDirectories( globalInfo.ReleasesFolder );
+                     Cake.CleanDirectories( globalInfo.ReleasesFolder.ToString() );
                  } );
 
 
@@ -73,9 +74,9 @@ namespace CodeCake
             Task( "Push-Packages" )
                 .WithCriteria( () => globalInfo.IsValid )
                 .IsDependentOn( "Create-Packages" )
-                .Does( () =>
+                .Does( async () =>
                  {
-                     globalInfo.PushArtifacts();
+                     await globalInfo.PushArtifactsAsync();
                  } );
 
             // The Default task for this script can be set here.
