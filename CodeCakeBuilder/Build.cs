@@ -1,18 +1,8 @@
-
-using Cake.Common.Solution;
-using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Build;
-using Cake.Common.Tools.NUnit;
+using Cake.Common.IO;
 using Cake.Core;
 using Cake.Core.Diagnostics;
-using Cake.Core.IO;
-using SimpleGitVersion;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using NuGet.Versioning;
-using Cake.Common.IO;
 
 namespace CodeCake
 {
